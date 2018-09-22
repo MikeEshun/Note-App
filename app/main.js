@@ -1,3 +1,5 @@
+const EventBus = new Vue();
+
 const inputComponent = {
   template: `
     <input 
@@ -13,7 +15,7 @@ const inputComponent = {
     }),
     methods: {
       monitorEnterKey() {
-        this.$emit('add-note', {
+        EventBus.$emit('add-note', {
           note: this.input,
           timestamp: new Date().toLocaleString(),
         });
@@ -25,10 +27,17 @@ const inputComponent = {
 const noteCountComponent = {
   template: `
     <div class="column has-text-centered">
-      Note count: {{ notes.length }}
+      Note count: <strong>{{ noteCount }}</strong>
     </div>
     `,
-    props: ['notes'],
+    data: () => ({
+      noteCount: 0
+    }),
+    created() {
+      EventBus.$on('add-note', 
+        event => this.noteCount++
+      );
+    },
 };
 
 new Vue({
@@ -47,5 +56,10 @@ new Vue({
       this.notes.push(event.note);
       this.timestamps.push(event.timestamp);
     },
+  },
+  created() {
+    EventBus.$on('add-note', 
+      event => this.addNote(event)
+    );
   },
 });
