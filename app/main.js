@@ -34,7 +34,6 @@ const noteCountComponent = {
 new Vue({
   el: '#app',
   data: {
-    count: 0,
     notes: [],
     timestamps: [],
     placeholder: 'Enter a note'
